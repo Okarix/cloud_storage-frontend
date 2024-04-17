@@ -13,7 +13,12 @@ export default function Home() {
 				>
 					Использовать
 				</Link>
-				<button className='px-4 py-2  text-white '>О проекте</button>
+				<Link
+					href='/about'
+					className='px-4 py-2  text-white '
+				>
+					О проекте
+				</Link>
 			</div>
 		</WavyBackground>
 	);
