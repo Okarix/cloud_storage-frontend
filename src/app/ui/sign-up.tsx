@@ -3,46 +3,86 @@ import React from 'react';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { cn } from '@/utils/cn';
+import { useState } from 'react';
+import { RegisterFormDTO } from '@/api/dto/auth.dto';
+import * as Api from '@/api';
+import { setCookie } from 'nookies';
 
 export function SignUp() {
-	// const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-	// 	e.preventDefault();
-	// 	console.log('Form submitted');
-	// };
+	const [formData, setFormData] = useState<RegisterFormDTO>({
+		email: '',
+		password: '',
+		fullName: '',
+	});
 
-	const onSubmit = (values: any) => [console.log(values)];
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setFormData(prevState => ({
+			...prevState,
+			[name]: value,
+		}));
+	};
+
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		console.log('Form submitted');
+		try {
+			const { token } = await Api.auth.register(formData);
+
+			setCookie(null, '_token', token, {
+				path: '/',
+			});
+
+			setFormData({
+				email: '',
+				password: '',
+				fullName: '',
+			});
+		} catch (err) {
+			console.error(err);
+		}
+	};
 	return (
 		<div className='max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black'>
 			<h2 className='font-bold text-xl text-neutral-800 dark:text-neutral-200'>Зарегистрироваться</h2>
 
 			<form
 				className='my-8'
-				onSubmit={onSubmit}
+				onSubmit={handleSubmit}
 			>
 				<div className='flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4'>
 					<LabelInputContainer>
 						<Label htmlFor='firstname'>Полное имя</Label>
 						<Input
-							id='firstname'
+							name='fullName'
+							id='fullName'
 							placeholder='Tyler Durden'
 							type='text'
+							value={formData.fullName}
+							onChange={handleInputChange}
 						/>
 					</LabelInputContainer>
 				</div>
 				<LabelInputContainer className='mb-3'>
 					<Label htmlFor='email'>Адрес почты</Label>
 					<Input
+						name='email'
 						id='signUpEmail'
 						placeholder='example@gmail.com'
 						type='email'
+						value={formData.email}
+						onChange={handleInputChange}
 					/>
 				</LabelInputContainer>
 				<LabelInputContainer className='mb-3'>
 					<Label htmlFor='password'>Пароль</Label>
 					<Input
+						name='password'
 						id='signUpPassword'
 						placeholder='••••••••'
 						type='password'
+						value={formData.password}
+						onChange={handleInputChange}
 					/>
 				</LabelInputContainer>
 
