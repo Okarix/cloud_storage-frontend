@@ -27,9 +27,7 @@ export function Login() {
 		try {
 			const { token } = await Api.auth.login(formData);
 
-			setCookie(null, '_token', token, {
-				path: '/',
-			});
+			window.localStorage.setItem('token', token);
 
 			setFormData({
 				email: '',

@@ -29,9 +29,7 @@ export function SignUp() {
 		try {
 			const { token } = await Api.auth.register(formData);
 
-			setCookie(null, '_token', token, {
-				path: '/',
-			});
+			window.localStorage.setItem('token', token);
 
 			setFormData({
 				email: '',

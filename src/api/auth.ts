@@ -1,6 +1,5 @@
 import axios from '@/core/axios';
 import { LoginFormDTO, LoginResponseDTO, RegisterFormDTO, RegisterResponseDTO, User } from './dto/auth.dto';
-import { destroyCookie } from 'nookies';
 
 export const login = async (values: LoginFormDTO): Promise<LoginResponseDTO> => {
 	return (await axios.post('/auth/login', values)).data;
@@ -10,10 +9,20 @@ export const register = async (values: RegisterFormDTO): Promise<RegisterRespons
 	return (await axios.post('/auth/register', values)).data;
 };
 
-export const getMe = async (): Promise<User> => {
-	return (await axios.get('/users/me')).data;
-};
+// export const getMe = async (token: string): Promise<User> => {
+// 	try {
+// 		const response = await axios.get('/users/me', {
+// 			headers: {
+// 				Authorization: `Bearer ${token}`,
+// 			},
+// 		});
+
+// 		return response.data;
+// 	} catch (error: any) {
+// 		throw new Error('Ошибка получения данных пользователя: ' + error.message);
+// 	}
+// };
 
 export const logOut = () => {
-	destroyCookie(null, '_token', { path: '/' });
+	window.localStorage.removeItem('_token');
 };

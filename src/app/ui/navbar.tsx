@@ -1,16 +1,22 @@
+'use client';
+
 import { Avatar, Button, Popover } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 import { UserOutlined } from '@ant-design/icons';
-
-const content = (
-	<div>
-		<p>Content</p>
-		<p>Content</p>
-	</div>
-);
+import * as Api from '@/api';
+import { useRouter } from 'next/navigation';
 
 export default function NavBar() {
+	const router = useRouter();
+
+	const onClickLogOut = () => {
+		if (window.confirm('Вы действительно хотите выйти?')) {
+			Api.auth.logOut();
+			router.push('/');
+		}
+	};
+
 	return (
 		<nav className='fixed rounded-full border bg-black border-white/[0.2]  shadow-input flex justify-around items-center px-6 py-4 max-w-lg mx-auto mt-2 z-50 inset-x-0'>
 			<div className=' flex space-x-4'>
@@ -34,6 +40,7 @@ export default function NavBar() {
 					<Button
 						type='default'
 						className='bg-black text-white'
+						onClick={onClickLogOut}
 					>
 						Выйти
 					</Button>
